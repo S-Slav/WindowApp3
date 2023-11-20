@@ -14,7 +14,7 @@ public class EMMain extends Application {
     public void start(Stage mainStage) throws IOException {
         stage = mainStage;
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-menu.fxml")));
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root, 1280, 720);
         mainStage.setTitle("Employee Management Program");
         mainStage.setScene(scene);
         mainStage.show();

@@ -85,7 +85,10 @@ public class EmployeeMenu implements Initializable {
     @FXML
     public void removeEmployee(){
         int selectedID = employeeData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){employeeData.getItems().remove(selectedID);}else{midPaneText.setVisible(true);}
+        if(selectedID!=-1){
+            employees.remove(selectedID);
+            // employeeData.getItems().remove(selectedID);
+        }else{midPaneText.setVisible(true);}
     }
     @FXML
     public void hideButtonWarning(){
