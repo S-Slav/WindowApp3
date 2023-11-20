@@ -54,41 +54,42 @@ public class EmployeeMenu implements Initializable {
         if(nameField.getText().isEmpty()||surnameField.getText().isEmpty()||stateField.getValue()==null||birthYearField.getText().isEmpty()||salaryField.getText().isEmpty()) {
             rightPaneText.setVisible(true);
             rightPaneText.setText("Provide all values");
-        }else{
-            try {
-                Employee employee = new Employee(nameField.getText(), surnameField.getText(), stateField.getValue(), Integer.parseInt(birthYearField.getText()), Double.parseDouble(salaryField.getText()));
-                employees = employeeData.getItems();
-                employees.add(employee);
-                employeeData.setItems(employees);
-                rightPaneText.setVisible(false);
-            }catch (NumberFormatException nfe){
-                rightPaneText.setVisible(true);
-                rightPaneText.setText("Birth Year and Salary must be numerical values");
-            }
+            return;
+        }
+        try {
+            Employee employee = new Employee(nameField.getText(), surnameField.getText(), stateField.getValue(), Integer.parseInt(birthYearField.getText()), Double.parseDouble(salaryField.getText()));
+            employees = employeeData.getItems();
+            employees.add(employee);
+            employeeData.setItems(employees);
+            rightPaneText.setVisible(false);
+        }catch (NumberFormatException nfe){
+            rightPaneText.setVisible(true);
+            rightPaneText.setText("Birth Year and Salary must be numerical values");
         }
     }
     @FXML
     public void loadEmployeeIntoFields(){
         int selectedID = employeeData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){
-            nameField.setText(nameColumn.getCellData(selectedID));
-            surnameField.setText(surnameColumn.getCellData(selectedID));
-            stateField.setValue(stateColumn.getCellData(selectedID));
-            birthYearField.setText(birthYearColumn.getCellData(selectedID).toString());
-            salaryField.setText(salaryColumn.getCellData(selectedID).toString());
-            employeeData.getItems().remove(selectedID);
-        }else{
+        if(selectedID==-1){
             rightPaneText.setVisible(true);
             rightPaneText.setText("Select an employee in the table first");
+            return;
         }
+        nameField.setText(nameColumn.getCellData(selectedID));
+        surnameField.setText(surnameColumn.getCellData(selectedID));
+        stateField.setValue(stateColumn.getCellData(selectedID));
+        birthYearField.setText(birthYearColumn.getCellData(selectedID).toString());
+        salaryField.setText(salaryColumn.getCellData(selectedID).toString());
+        employeeData.getItems().remove(selectedID);
     }
     @FXML
     public void removeEmployee(){
         int selectedID = employeeData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){
-            employees.remove(selectedID);
-            // employeeData.getItems().remove(selectedID);
-        }else{midPaneText.setVisible(true);}
+        if(selectedID==-1){
+            midPaneText.setVisible(true);
+            return;
+        }
+        employees.remove(selectedID);
     }
     @FXML
     public void hideButtonWarning(){

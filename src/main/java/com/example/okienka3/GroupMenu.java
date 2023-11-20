@@ -70,51 +70,58 @@ public class GroupMenu implements Initializable {
     @FXML
     public void addEmployeeFromFields(){
         int selectedID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1) {
-            if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() || stateField.getValue() == null || birthYearField.getText().isEmpty() || salaryField.getText().isEmpty()) {
-                rightPaneText.setVisible(true);
-                rightPaneText.setText("Provide all values");
-            } else {
-                try {
-                    Employee employee = new Employee(nameField.getText(), surnameField.getText(), stateField.getValue(), Integer.parseInt(birthYearField.getText()), Double.parseDouble(salaryField.getText()));
-                    for (Employee e:employeeData.getItems()) {
-                        employeeGroups.get(selectedID).addEmployee(e);
-                    }
-                    employeeGroups.get(selectedID).addEmployee(employee);
-                    employeeData.setItems(FXCollections.observableArrayList(employeeGroups.get(selectedID).getEmployeeList()));
-                    rightPaneText.setVisible(false);
-                } catch (NumberFormatException nfe) {
-                    rightPaneText.setVisible(true);
-                    rightPaneText.setText("Birth Year and Salary must be numerical values");
-                }
+        if(selectedID==-1) {
+            midGroupPaneText.setVisible(true);
+        return;
+        }
+        if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() || stateField.getValue() == null || birthYearField.getText().isEmpty() || salaryField.getText().isEmpty()) {
+            rightPaneText.setVisible(true);
+            rightPaneText.setText("Provide all values");
+            return;
+        }
+        try {
+            Employee employee = new Employee(nameField.getText(), surnameField.getText(), stateField.getValue(), Integer.parseInt(birthYearField.getText()), Double.parseDouble(salaryField.getText()));
+            for (Employee e:employeeData.getItems()) {
+                employeeGroups.get(selectedID).addEmployee(e);
             }
-        }else{midGroupPaneText.setVisible(true);}
+            employeeGroups.get(selectedID).addEmployee(employee);
+            employeeData.setItems(FXCollections.observableArrayList(employeeGroups.get(selectedID).getEmployeeList()));
+            rightPaneText.setVisible(false);
+        } catch (NumberFormatException nfe) {
+            rightPaneText.setVisible(true);
+            rightPaneText.setText("Birth Year and Salary must be numerical values");
+        }
+
     }
     @FXML
     public void loadEmployeeIntoFields(){
         int selectedID = employeeData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){
-            nameField.setText(nameColumn.getCellData(selectedID));
-            surnameField.setText(surnameColumn.getCellData(selectedID));
-            stateField.setValue(stateColumn.getCellData(selectedID));
-            birthYearField.setText(birthYearColumn.getCellData(selectedID).toString());
-            salaryField.setText(salaryColumn.getCellData(selectedID).toString());
-            employeeData.getItems().remove(selectedID);
-        }else{
+        if(selectedID==-1) {
             rightPaneText.setVisible(true);
             rightPaneText.setText("Select an employee in the table first");
+            return;
         }
+        nameField.setText(nameColumn.getCellData(selectedID));
+        surnameField.setText(surnameColumn.getCellData(selectedID));
+        stateField.setValue(stateColumn.getCellData(selectedID));
+        birthYearField.setText(birthYearColumn.getCellData(selectedID).toString());
+        salaryField.setText(salaryColumn.getCellData(selectedID).toString());
+        employeeData.getItems().remove(selectedID);
     }
     @FXML
     public void removeEmployee(){
         int selectedID = employeeData.getSelectionModel().getSelectedIndex();
         int selectedGroupID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){
-            if(selectedGroupID!=-1) {
-                employeeData.getItems().remove(selectedID);
-                employeeGroups.get(selectedGroupID).getEmployeeList().remove(selectedID);
-            }else{midGroupPaneText.setVisible(true);}
-        }else{midPaneText.setVisible(true);}
+        if(selectedGroupID==-1) {
+            midGroupPaneText.setVisible(true);
+            return;
+        }
+        if(selectedID==-1){
+            midPaneText.setVisible(true);
+            return;
+        }
+        employeeData.getItems().remove(selectedID);
+        employeeGroups.get(selectedGroupID).getEmployeeList().remove(selectedID);
     }
     @FXML
     public void hideButtonWarning(){
@@ -124,51 +131,59 @@ public class GroupMenu implements Initializable {
     @FXML
     public void filterTableBySurname(){
         int selectedID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1) {
-            String filterString = filterField.getText();
-            FilteredList<Employee> filteredList = new FilteredList<>(FXCollections.observableArrayList(employeeGroups.get(selectedID).getEmployeeList()), s -> Objects.equals(s.getLastName(), filterString));
-            employeeData.setItems(filteredList);
-        }else{midGroupPaneText.setVisible(true);}
+        if(selectedID==-1) {
+            midGroupPaneText.setVisible(true);
+            return;
+        }
+        String filterString = filterField.getText();
+        FilteredList<Employee> filteredList = new FilteredList<>(FXCollections.observableArrayList(employeeGroups.get(selectedID).getEmployeeList()), s -> Objects.equals(s.getLastName(), filterString));
+        employeeData.setItems(filteredList);
     }
     @FXML
     public void disableFilterTableBySurname(){
         int selectedID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1) {
+        if(selectedID==-1) {
+            midGroupPaneText.setVisible(true);
+            return;
+        }
         employeeData.setItems(FXCollections.observableArrayList(employeeGroups.get(selectedID).getEmployeeList()));
-        }else{midGroupPaneText.setVisible(true);}
     }
     @FXML
     public void removeGroup(){
         int selectedID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){groupData.getItems().remove(selectedID);}else{midPaneText.setVisible(true);}
+        if(selectedID==-1) {
+            midPaneText.setVisible(true);
+            return;
+        }
+        groupData.getItems().remove(selectedID);
     }
     @FXML
     public void loadGroupIntoFields(){
         int selectedID = groupData.getSelectionModel().getSelectedIndex();
-        if(selectedID!=-1){
-            groupNameField.setText(nameColumn.getCellData(selectedID));
-            groupMaxSizeColumn.setText(salaryColumn.getCellData(selectedID).toString());
-        }else{
+        if(selectedID==-1){
             rightGroupPaneText.setVisible(true);
             rightGroupPaneText.setText("Select a group in the table first");
+            return;
         }
+        groupNameField.setText(nameColumn.getCellData(selectedID));
+        groupMaxSizeColumn.setText(salaryColumn.getCellData(selectedID).toString());
     }
     @FXML
     public void addGroupFromFields(){
         if(groupNameField.getText().isEmpty()||maxSizeField.getText().isEmpty()) {
         rightGroupPaneText.setVisible(true);
         rightGroupPaneText.setText("Provide all values");
-        }else{
-            try {
-                ClassEmployee employeeGroup = new ClassEmployee(groupNameField.getText(),Integer.parseInt(maxSizeField.getText()));
-                employeeGroups = groupData.getItems();
-                employeeGroups.add(employeeGroup);
-                groupData.setItems(employeeGroups);
-                rightGroupPaneText.setVisible(false);
-            }catch (NumberFormatException nfe){
-                rightGroupPaneText.setVisible(true);
-                rightGroupPaneText.setText("Max Size must be a numerical value");
-            }
+        return;
+        }
+        try {
+            ClassEmployee employeeGroup = new ClassEmployee(groupNameField.getText(),Integer.parseInt(maxSizeField.getText()));
+            employeeGroups = groupData.getItems();
+            employeeGroups.add(employeeGroup);
+            groupData.setItems(employeeGroups);
+            rightGroupPaneText.setVisible(false);
+        }catch (NumberFormatException nfe){
+            rightGroupPaneText.setVisible(true);
+            rightGroupPaneText.setText("Max Size must be a numerical value");
         }
     }
     @FXML

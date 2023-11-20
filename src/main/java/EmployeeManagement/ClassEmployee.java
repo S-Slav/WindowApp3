@@ -30,34 +30,34 @@ public class ClassEmployee {
         }
     }
     public void addSalary(Employee employee,double amount){
-        if (this.EmployeeList.contains(employee)){
-            if (amount>=0) {
-                employee.changeSalary(amount);
-                System.out.println("Salary change successful, new salary is: "+ANSI_GREEN+employee.salary+ANSI_RESET+"$");
-            }else{
-                System.out.println("Negative amount declared, are you sure you want to reduce salary?");
-                System.out.println("Type \"reduce\" to confirm, if you want to cancel, type in anything else.");
-                Scanner in = new Scanner(System.in);
-                if (Objects.equals(in.next(), "reduce")){
-                    if(Math.abs(amount)>employee.salary){
-                        amount=-employee.salary;
-                    }
-                    employee.changeSalary(amount);
-                    System.out.println("Salary change successful, new salary is: "+ANSI_GREEN+employee.salary+ANSI_RESET+"$");
-                }else{
-                    System.out.println("Salary change cancelled.");
-                }
-            }
-        }else{
+        if (!this.EmployeeList.contains(employee)) {
             System.out.println("EmployeeManagement.Employee not found in this group.");
+            return;
         }
+        if (amount < 0) {
+            System.out.println("Negative amount declared, are you sure you want to reduce salary?");
+            System.out.println("Type \"reduce\" to confirm, if you want to cancel, type in anything else.");
+            Scanner in = new Scanner(System.in);
+            if (!Objects.equals(in.next(), "reduce")) {
+                System.out.println("Salary change cancelled.");
+                return;
+            }
+            if (Math.abs(amount) > employee.salary) {
+                amount = -employee.salary;
+            }
+            employee.changeSalary(amount);
+            System.out.println("Salary change successful, new salary is: " + ANSI_GREEN + employee.salary + ANSI_RESET + "$");
+            return;
+        }
+        employee.changeSalary(amount);
+        System.out.println("Salary change successful, new salary is: " + ANSI_GREEN + employee.salary + ANSI_RESET + "$");
     }
     public void changeCondition(Employee employee,EmployeeCondition condition){
-        if (this.EmployeeList.contains(employee)){
+        if (!this.EmployeeList.contains(employee)){
             employee.changeCondition(condition);
-        }else{
-            System.out.println("EmployeeManagement.Employee not found in this group.");
+            return;
         }
+            System.out.println("EmployeeManagement.Employee not found in this group.");
     }
 
     public void search(String lastName) {
